@@ -1,0 +1,47 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type Journal {
+  id: ID!
+  title: String!
+  content: String!
+  created_at: String
+  updated_at: String
+}
+
+type Query {
+  myJournals: [Journal!]! @field(resolver: "App\\GraphQL\\Queries\\JournalQuery@myJournals") @guard
+}
+
+type Mutation {
+  register(
+    firstname: String!
+    lastname: String!
+    email: String!
+    password: String!
+  ): User! @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@register")
+
+  login(
+    email: String!
+    password: String!
+  ): AuthPayload! @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@login")
+
+  createJournal(
+    title: String!
+    content: String!
+  ): Journal! @field(resolver: "App\\GraphQL\\Mutations\\JournalMutation@createJournal") @guard
+
+  updateJournal(
+    id: ID!
+    title: String!
+    content: String!
+  ): Journal! @guard @field(resolver: "App\\GraphQL\\Mutations\\JournalMutation@updateJournal")
+}
